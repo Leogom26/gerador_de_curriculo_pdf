@@ -24,37 +24,59 @@ function dadosUsuario() {
       <label>E-mail:</label>
       <input type="email" name="email">
 
-      <h2>Formação Acadêmica</h2>
+      <div>
+        <h2>Formação Acadêmica</h2>
 
-      <label>Nível de Escolaridade:</label>
-      <select name="escolaridade">
-          <option value="fundamental">Ensino Fundamental</option>
-          <option value="medio">Ensino Médio</option>
-          <option value="tecnico">Curso Técnico</option>
-          <option value="superior">Ensino Superior</option>
-          <option value="pos">Pós-graduação</option>
-          <option value="mestrado">Mestrado</option>
-          <option value="doutorado">Doutorado</option>
-      </select>
+        <label>Nível de Escolaridade:</label>
+        <select name="escolaridade">
+            <option value="fundamental">Ensino Fundamental</option>
+            <option value="medio">Ensino Médio</option>
+            <option value="tecnico">Curso Técnico</option>
+            <option value="superior">Ensino Superior</option>
+            <option value="pos">Pós-graduação</option>
+            <option value="mestrado">Mestrado</option>
+            <option value="doutorado">Doutorado</option>
+        </select>
 
-      <label>Curso / Formação:</label>
-      <input type="text" name="curso">
+        <label>Curso / Formação:</label>
+        <input type="text" name="curso">
 
-      <label>Instituição:</label>
-      <input type="text" name="instituicao">
+        <label>Instituição:</label>
+        <input type="text" name="instituicao">
 
-      <label>Ano de Conclusão:</label>
-      <input type="number" name="conclusao" min="1900" max="2100">
+        <label>Ano de Conclusão:</label>
+        <input type="number" name="conclusao" min="1900" max="2100">
+      </div>
 
+      <div>
+        <h2>Cursos Profissionais</h2>
+
+        <div id="cursos-container">
+          <div class="curso-item">
+            <button type="button" class="accordion">Curso 1</button>
+            <div class="panel">
+
+              <label>Nome do Curso:</label>
+              <input type="text" name="curso_nome_1">
+
+              <label>Instituição:</label>
+              <input type="text" name="curso_instituicao_1">
+
+              <label>Ano de Conclusão:</label>
+              <input type="number" name="curso_ano_1" min="1900" max="2100">
+
+            </div>
+          </div>
+        </div>
+
+        <button type="button" id="add-curso" style="margin-top:10px;">Adicionar curso +</button>
+      </div>
       
       <h2>Experiência Profissional</h2>
-
       <div id="experiencias-container">
-
         <div class="exp-item">
           <button type="button" class="accordion">Experiência 1</button>
           <div class="panel">
-
             <label>Empresa:</label>
             <input type="text" name="empresa_1">
 
@@ -66,23 +88,16 @@ function dadosUsuario() {
 
             <label>Descrição das Atividades:</label>
             <textarea name="atividades_1" rows="4"></textarea>
-
           </div>
         </div>
-
-      </div>
-
+        </div>
       <button type="button" id="add-exp" style="margin-top:10px;">Adicionar experiência +</button>
 
-
-      <label>Descrição das Atividades:</label>
-      <textarea name="atividades" rows="4"></textarea>
-
-      <h2>Habilidades</h2>
-
-      <label>Liste suas habilidades:</label>
-      <textarea name="habilidades" rows="4" placeholder="Ex: Comunicação, Trabalho em equipe, Excel, etc."></textarea>
-
+      <div>
+        <h2>Habilidades</h2>
+        <label>Liste suas habilidades:</label>
+        <textarea name="habilidades" rows="4" placeholder="Ex: Comunicação, Trabalho em equipe, Excel, etc."></textarea>
+      </div>
       <button type="submit" id="enviar" >Enviar</button>
     </form>
     <div id="footer">Leo Gomes • Desenvolvedor Web</div>
@@ -93,6 +108,9 @@ function dadosUsuario() {
   form.addEventListener("submit", cadastrar);
 
   document.getElementById("add-exp").addEventListener("click", addExperience);
+  setupAccordion();
+
+  document.getElementById("add-curso").addEventListener("click", addCurso);
   setupAccordion();
 }
 
@@ -110,6 +128,34 @@ function setupAccordion() {
   });
 }
 
+//add course
+function addCurso() {
+  const container = document.getElementById("cursos-container");
+  const count = container.children.length + 1;
+
+  const html = `
+    <div class="curso-item">
+      <button type="button" class="accordion">Curso ${count}</button>
+      <div class="panel">
+
+        <label>Nome do Curso:</label>
+        <input type="text" name="curso_nome_${count}">
+
+        <label>Instituição:</label>
+        <input type="text" name="curso_instituicao_${count}">
+
+        <label>Ano de Conclusão:</label>
+        <input type="number" name="curso_ano_${count}" min="1900" max="2100">
+
+      </div>
+    </div>
+  `;
+
+  container.insertAdjacentHTML("beforeend", html);
+  setupAccordion(); // Reativa o accordion para o novo item
+}
+
+// add experience
 function addExperience() {
   const container = document.getElementById("experiencias-container");
   const count = container.children.length + 1;
@@ -175,12 +221,24 @@ function addExperience() {
 //   `;
 // }
 
+// cadastrar
 function cadastrar(e) {
   e.preventDefault();
 
+  const dados = Object.fromEntries(new FormData(e.target));
+
   btnGenerate.style.display = "block";
 
-  const dados = Object.fromEntries(new FormData(e.target));
+  const cursos = [];
+  let i = 1;
+  while (dados[`curso_nome_${i}`]) {
+    cursos.push({
+      nome: dados[`curso_nome_${i}`],
+      instituicao: dados[`curso_instituicao_${i}`],
+      ano: dados[`curso_ano_${i}`],
+    });
+    i++;
+  }
 
   // Captura todas as experiências
   const experiencias = [];
@@ -211,6 +269,19 @@ function cadastrar(e) {
       <p><strong>Curso:</strong> ${dados.curso}</p>
       <p><strong>Instituição:</strong> ${dados.instituicao}</p>
       <p><strong>Ano de Conclusão:</strong> ${dados.conclusao}</p>
+
+      <h2>Cursos Profissionais</h2>
+      ${cursos
+        .map(
+          (c) => `
+        <p><strong>Curso:</strong> ${c.nome}</p>
+        <p><strong>Instituição:</strong> ${c.instituicao}</p>
+        <p><strong>Ano:</strong> ${c.ano}</p>
+        <br>
+      `
+        )
+        .join("")}
+
 
       <h2>Experiência Profissional</h2>
 
