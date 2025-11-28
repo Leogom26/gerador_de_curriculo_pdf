@@ -48,14 +48,16 @@ function dadosUsuario() {
 
       <h2>Experiência Profissional</h2>
 
-      <label>Empresa:</label>
-      <input type="text" name="empresa">
+      <div>
+        <label>Empresa:</label>
+        <input type="text" name="empresa">
 
-      <label>Cargo:</label>
-      <input type="text" name="cargo">
+        <label>Cargo:</label>
+        <input type="text" name="cargo">
 
-      <label>Período:</label>
-      <input type="text" name="periodo" placeholder="ex: 2019 - 2022">
+        <label>Período:</label>
+        <input type="text" name="periodo" placeholder="ex: 2019 - 2022">
+      </div>
 
       <label>Descrição das Atividades:</label>
       <textarea name="atividades" rows="4"></textarea>
