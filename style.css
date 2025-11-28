@@ -59,3 +59,25 @@ button:hover {
   border-top: 2px solid #ddd;
   margin-top: 30px;
 }
+.accordion {
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  background: #eee;
+  border: none;
+  outline: none;
+  margin-top: 10px;
+}
+
+.accordion.active {
+  background: #ddd;
+}
+
+.panel {
+  display: none;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
